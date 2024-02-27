@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Attach",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "${workspaceFolder}/example/build/wario-save",
+            "MIMode": "lldb",
+        },
+        {
+            "name": "(lldb) Launch",
+            "setupCommands": [
+                {
+                    "description": "lldb formatting",
+                    "text": "type format add --format u 'unsigned char'",
+                    "ignoreFailures": true
+                }
+            ],
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/example/build/wario-save",
+            "args": [
+                "${workspaceFolder}/example/saves/wario.sav"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "targetArchitecture": "arm64",
+            "preLaunchTask": "build-wario-save",
+        }
+    ]
+}
