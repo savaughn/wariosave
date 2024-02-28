@@ -33,6 +33,10 @@
 #define MAX_COURSE_NAME_CHAR 18
 #define MAX_COIN_DIGITS_STR 7
 
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned int uint32_t;
+
 typedef struct
 {
     char name[MAX_LVL_NAME_CHAR];
