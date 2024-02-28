@@ -25,18 +25,11 @@ jobs:
     - name: Build wariosave
       run: |
         cd lib
-        mkdir build
-        make
-
-    - name: Bundle Assets
-      run: |
-        # Copy assets to the same directory as the executable
         mkdir -p build/release
-        cd lib/
         make release
 
     - name: Publish Build Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: wariosave-artifacts-linux
-        path: build/release
+        path: lib/build/release

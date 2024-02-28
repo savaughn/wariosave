@@ -21,14 +21,8 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         msystem: UCRT64
-  
-    - name: Build wariosave
-      run: |
-        cd lib
-        mkdir build
-        make
 
-    - name: Bundle Assets
+    - name: Build wariosave
       run: |
         # Copy assets to the same directory as the executable
         mkdir -p build/release
@@ -39,4 +33,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: wariosave-artifacts-windows-x64
-        path: build/release
+        path: lib/build/release
