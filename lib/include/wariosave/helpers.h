@@ -34,7 +34,7 @@ uint32_t get_decimal_bytes(int byte1, int byte2, int byte3);
 * @param file_path The path to the save file
 * @return The FileError error code
 */
-int load_save_to_buffer(WarioSave *save, const char *file_path);
+int load_save_to_buffer(WarioGameSave *save, const char *file_path);
 
 /**
  * Get the completion rate of each level saving the data into the PlayerSave struct

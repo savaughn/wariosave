@@ -22,12 +22,16 @@
         ((byte) & 0x02 ? '1' : '0'), \
         ((byte) & 0x01 ? '1' : '0')
 
-#define SAVE_FILE_OFFSET 0x4
+#define SAVE_FILE_A_OFFSET 0x04
+#define SAVE_FILE_B_OFFSET 0x44
+#define SAVE_FILE_C_OFFSET 0x84
+#define SAVE_FILE_OFFSET 0x40
 #define SAVE_STRUCT_SIZE 0x14
 #define LEVELS_COUNT 7
 #define MAX_COURSE_COUNT 8
 #define MAX_LVL_NAME_CHAR 14
 #define MAX_COURSE_NAME_CHAR 18
+#define MAX_COIN_DIGITS_STR 7
 
 typedef struct
 {
@@ -89,6 +93,8 @@ typedef struct
     uint8_t sGameCompleted;
 } WarioSave;
 
+typedef struct { WarioSave save[3]; } WarioGameSave;
+
 // Custom save file structure for useful data
 typedef struct
 {
@@ -107,5 +113,13 @@ typedef enum
     MEMORY_ERROR,
     READ_ERROR
 } FileError;
+
+typedef enum
+{
+    FILE_A = 0,
+    FILE_B,
+    FILE_C,
+    FILE_COUNT
+} SaveSlot;
 
 #endif
