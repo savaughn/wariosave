@@ -1,0 +1,42 @@
+name: Build and Bundle Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_windows:
+    # if: false  # This workflow is disabled
+    runs-on: windows-latest
+
+    steps:
+    - run: git config --global core.autocrlf input
+    - uses: actions/checkout@v3
+      
+    - name: Setup msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+  
+    - name: Build wariosave
+      run: |
+        cd lib
+        mkdir build
+        make
+
+    - name: Bundle Assets
+      run: |
+        # Copy assets to the same directory as the executable
+        mkdir -p build/release
+        cd lib/
+        make release
+
+    - name: Publish Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: wariosave-artifacts-windows-x64
+        path: build/release

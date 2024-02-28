@@ -1,0 +1,70 @@
+name: Build and Bundle MacOS (x64 and arm64)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_macos_x64:
+    # if: false  # This workflow is disabled
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [x64]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build wariosave
+      run: |
+        cd lib
+        mkdir build
+        make
+
+    - name: Bundle Assets
+      run: |
+        # Copy assets to the same directory as the executable
+        mkdir -p build/release
+        cd lib/
+        make release
+
+    - name: Publish Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: wariosave-artifacts-macos-x64
+        path: build/release
+
+  build_macos_arm64:
+    # if: false  # This workflow is disabled
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [arm64]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+  
+      - name: Build wariosave
+        run: |
+          cd lib
+          mkdir build
+          make
+  
+      - name: Bundle Assets
+        run: |
+          # Copy assets to the same directory as the executable
+          mkdir -p build/release
+          cd lib/
+          make release
+  
+      - name: Publish Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: wariosave-artifacts-macos-arm64
+          path: build/release

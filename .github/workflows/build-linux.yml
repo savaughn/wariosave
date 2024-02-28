@@ -1,0 +1,42 @@
+name: Build and Bundle Ubuntu
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_linux:
+    # if: false  # This workflow is disabled
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make build-essential
+
+    - name: Build wariosave
+      run: |
+        cd lib
+        mkdir build
+        make
+
+    - name: Bundle Assets
+      run: |
+        # Copy assets to the same directory as the executable
+        mkdir -p build/release
+        cd lib/
+        make release
+
+    - name: Publish Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: wariosave-artifacts-linux
+        path: build/release
