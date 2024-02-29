@@ -66,9 +66,9 @@ int load_save_to_buffer(WarioGameSave *save, const char *file_path)
     return error;
 }
 
-void get_completion_rate(WarioSave *save, PlayerSave *player_save)
+void get_level_completion_rates(WarioSave *save, Level *level_data)
 {
-    uint8_t levelCompletions[LEVELS_COUNT] = {
+    uint8_t level_completion_bitmask[LEVELS_COUNT] = {
         save->sMapRiceBeachCompletion,
         save->sMapMtTeapotCompletion,
         save->sMapStoveCanyonCompletion,
@@ -79,22 +79,64 @@ void get_completion_rate(WarioSave *save, PlayerSave *player_save)
     for (int i = 0; i < LEVELS_COUNT; i++)
     {
         int count = 0;
-        uint8_t courseExitCount = defaultLevelData[i].courseExitCount;
-        player_save->levels[i].completionBitmask = levelCompletions[i];
-        for (int j = 0; j < courseExitCount; j++)
+        uint8_t course_exit_count = default_level_data[i].course_exit_count;
+        level_data[i].completion_bitmask = level_completion_bitmask[i];
+        for (int j = 0; j < course_exit_count; j++)
         {
-            count += (levelCompletions[i] >> j) & 1;
-            player_save->levels[i].completionRate = (int)(count / (courseExitCount * 1.0) * 100);
+            count += (level_completion_bitmask[i] >> j) & 1;
+            level_data[i].completion_rate = (int)(count / (course_exit_count * 1.0) * 100);
         }
     }
 }
 
+int get_player_lives(WarioSave *save)
+{
+    return get_decimal_byte(save->sLives);
+}
+
+int get_player_hearts(WarioSave *save)
+{
+    return get_decimal_byte(save->sHearts);
+}
+
+int get_player_coins(WarioSave *save)
+{
+    return get_decimal_bytes(save->sTotalCoins_High, save->sTotalCoins_Mid, save->sTotalCoins_Low);
+}
+
+bool get_is_game_completed(WarioSave *save)
+{
+    return (bool)save->sGameCompleted;
+}
+
+Treasure get_treasure_data(WarioSave *save)
+{
+    Treasure treasure;
+    treasure.count = 0;
+    treasure.completion_rate = 0;
+    for (int i = 0; i < MAX_TREASURE_COUNT; i++)
+    {
+        treasure.obtained[i] = 0;
+        // first byte in sTreasures is unused 
+        if ((save->sTreasures >> (i+1)) & 1)
+        {
+            treasure.obtained[i] = 1;
+            treasure.count++;
+        }
+    }
+
+    treasure.completion_rate = (int)(treasure.count / (MAX_TREASURE_COUNT * 1.0) * 100);
+    return treasure;
+}
+
 void initialize_player_save(WarioSave *save, PlayerSave *player_save)
 {
-    player_save->Lives = get_decimal_byte(save->sLives);
-    player_save->Hearts = get_decimal_byte(save->sHearts);
-    player_save->TotalCoins = get_decimal_bytes(save->sTotalCoins_High, save->sTotalCoins_Mid, save->sTotalCoins_Low);
-    player_save->GameCompleted = (bool)save->sGameCompleted;
-
-    get_completion_rate(save, player_save);
+    player_save->lives = get_player_lives(save);
+    player_save->hearts = get_player_hearts(save);
+    player_save->total_coins = get_player_coins(save);
+    player_save->game_completed = get_is_game_completed(save);
+    player_save->treasure = get_treasure_data(save);
+    Level player_level_data[LEVELS_COUNT];
+    get_level_completion_rates(save, player_level_data);
+    memcpy(player_save->levels, &player_level_data, sizeof(player_save->levels));
 }
