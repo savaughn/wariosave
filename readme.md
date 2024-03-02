@@ -1,7 +1,7 @@
 WarioSave
 ===============================================
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/savaughn/wariosave/blob/master/LICENSE.txt) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/savaughn/wariosave)](https://github.com/savaughn/wariosave/releases) [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/savaughn/wariosave/build-macos.yml?branch=master)](https://github.com/savaughn/wariosave/actions) [![GitHub issues](https://img.shields.io/github/issues/savaughn/wariosave)](https://github.com/savaughn/wariosave/issues) [![GitHub](https://img.shields.io/github/license/savaughn/wariosave)](https://github.com/savaughn/wariosave/blob/main/LICENSE) [![GitHub all releases](https://img.shields.io/github/downloads/savaughn/wariosave/total)](https://github.com/savaughn/wariosave/releases)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/savaughn/wariosave/blob/master/LICENSE.txt) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/savaughn/wariosave)](https://github.com/savaughn/wariosave/releases) [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/savaughn/wariosave/build-macos.yml?branch=main)](https://github.com/savaughn/wariosave/actions) [![GitHub issues](https://img.shields.io/github/issues/savaughn/wariosave)](https://github.com/savaughn/wariosave/issues) [![GitHub](https://img.shields.io/github/license/savaughn/wariosave)](https://github.com/savaughn/wariosave/blob/main/LICENSE) [![GitHub all releases](https://img.shields.io/github/downloads/savaughn/wariosave/total)](https://github.com/savaughn/wariosave/releases)
 
 The WarioSave library is a C library designed to read the player's save data in Super Mario Land 3: Wario Land. It provides functions to initialize player save data and calculate the completion rate for each level in the game.
 
@@ -24,6 +24,7 @@ To use the library, include the header files in your C source files and link aga
 ```c
 #include "wariosave.h"
 ```
+For detailed information on the functions provided by the WarioSave library, see the [API Documentation](docs/headers.md).
 
 ## Building the Example
 
