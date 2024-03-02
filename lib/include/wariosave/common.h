@@ -46,25 +46,25 @@ typedef unsigned int uint32_t;
  * course_exit_count: Number of course exits in the level
  * completion_bitmask: 8-bit bitmask of course completion
  * completion_rate: Completion rate of the level in percentage
-*/
-typedef struct
+ */
+typedef struct WS_Level
 {
     /**
      * Name of the level
      * Max length of 14 characters
-    */
+     */
     char name[WS_MAX_LVL_NAME_CHAR];
     /**
      * Number of course exits in the level
-    */
+     */
     uint8_t course_exit_count;
     /**
      * 8-bit bitmask of course completion
-    */
+     */
     uint8_t completion_bitmask;
     /**
      * Completion rate of the level in percentage
-    */
+     */
     uint8_t completion_rate;
 } WS_Level;
 
@@ -72,7 +72,7 @@ typedef struct
  * Default level data
  * name: Name of the level
  * course_exit_count: Number of course exits in the level
-*/
+ */
 static const WS_Level WS_default_level_data[WS_LEVELS_COUNT] = {
     {.name = "Rice Beach",
      .course_exit_count = 7,
@@ -82,29 +82,29 @@ static const WS_Level WS_default_level_data[WS_LEVELS_COUNT] = {
      .course_exit_count = 7,
      .completion_bitmask = 0,
      .completion_rate = 0},
-    {.name = "Stove Canyon", 
-    .course_exit_count = 6, 
-    .completion_bitmask = 0,
-    .completion_rate = 0},
+    {.name = "Stove Canyon",
+     .course_exit_count = 6,
+     .completion_bitmask = 0,
+     .completion_rate = 0},
     {.name = "S.S. Teacup",
-    .course_exit_count = 5, 
-    .completion_bitmask = 0,
-    .completion_rate = 0},
+     .course_exit_count = 5,
+     .completion_bitmask = 0,
+     .completion_rate = 0},
     {.name = "Parsley Woods",
-    .course_exit_count = 6,
-    .completion_bitmask = 0,
-    .completion_rate = 0},
+     .course_exit_count = 6,
+     .completion_bitmask = 0,
+     .completion_rate = 0},
     {.name = "Sherbet Land",
-    .course_exit_count = 6,
-    .completion_bitmask = 0,
-    .completion_rate = 0},
+     .course_exit_count = 6,
+     .completion_bitmask = 0,
+     .completion_rate = 0},
     {.name = "Syrup Castle",
-    .course_exit_count = 3,
-    .completion_bitmask = 0,
-    .completion_rate = 0}};
+     .course_exit_count = 3,
+     .completion_bitmask = 0,
+     .completion_rate = 0}};
 
 // Native save file structure
-typedef struct
+typedef struct WS_WarioSave
 {
     uint8_t sLevelId;
     // Values 99xxxx stored in dec format. Use ws_get_decimal_bytes to convert to int
@@ -128,7 +128,7 @@ typedef struct
     /**
      * 16-bit bitmask of treasures obtained
      * byte[0] is unused
-    */
+     */
     uint16_t sTreasures;
     // 8-bit bitmask of course completion
     uint8_t sMapStoveCanyonCompletion;
@@ -144,34 +144,37 @@ typedef struct
     uint8_t sCheckpointLevelId;
     /**
      * 1-bit flag of game completion
-    */
+     */
     uint8_t sGameCompleted;
 } WS_WarioSave;
 
 /**
  * All three save slots copied into one buffer
-*/
-typedef struct { WS_WarioSave save[WS_MAX_FILE_SLOT_COUNT]; } WS_WarioGameSave;
+ */
+typedef struct WS_WarioGameSave
+{
+    WS_WarioSave save[WS_MAX_FILE_SLOT_COUNT];
+} WS_WarioGameSave;
 
 static const char WS_treasure_names[WS_MAX_TREASURE_COUNT] = {
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'
-};
-typedef enum {
-    TREASURE_A = 0, 
-    TREASURE_B, 
-    TREASURE_C, 
-    TREASURE_D, 
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'};
+typedef enum WS_TreasureNames
+{
+    TREASURE_A = 0,
+    TREASURE_B,
+    TREASURE_C,
+    TREASURE_D,
     TREASURE_E,
-    TREASURE_F, 
-    TREASURE_G, 
-    TREASURE_H, 
-    TREASURE_I, 
-    TREASURE_J, 
-    TREASURE_K, 
-    TREASURE_L, 
-    TREASURE_M, 
-    TREASURE_N, 
-    TREASURE_O 
+    TREASURE_F,
+    TREASURE_G,
+    TREASURE_H,
+    TREASURE_I,
+    TREASURE_J,
+    TREASURE_K,
+    TREASURE_L,
+    TREASURE_M,
+    TREASURE_N,
+    TREASURE_O
 } WS_TreasureNames;
 
 /**
@@ -179,15 +182,16 @@ typedef enum {
  * count: count of treasures obtained
  * completion_rate: completion rate of the treasures in percentage
  * obtained: array of bools representing if the treasure was obtained
-*/
-typedef struct {
+ */
+typedef struct WS_Treasure
+{
     /**
      * count of treasures obtained
-    */
+     */
     uint8_t count;
     /**
      * completion rate of the treasures in percentage
-    */
+     */
     uint8_t completion_rate;
     /**
      * array of bools representing if the treasure was obtained
@@ -198,38 +202,38 @@ typedef struct {
 } WS_Treasure;
 
 // Custom save file structure for useful data
-typedef struct
+typedef struct WS_PlayerSave
 {
     /**
      * Total coins collected
      * 999,999 Max Value
-    */
+     */
     uint32_t total_coins;
     /**
      * Total hearts collected
      * 99 Max Value
-    */
+     */
     uint8_t hearts;
     /**
      * Total lives collected
      * 99 Max Value
-    */
+     */
     uint8_t lives;
     /**
      * Game completion status
-    */
+     */
     bool game_completed;
     /**
      * Array of level completion rates
-    */
+     */
     WS_Level levels[WS_LEVELS_COUNT];
     /**
      * WS_Treasure data
-    */
+     */
     WS_Treasure treasure;
 } WS_PlayerSave;
 
-typedef enum
+typedef enum WS_FileError
 {
     NO_ERROR = 0,
     FILE_ERROR,
@@ -237,7 +241,7 @@ typedef enum
     READ_ERROR
 } WS_FileError;
 
-typedef enum
+typedef enum WS_SaveSlot
 {
     FILE_A = 0,
     FILE_B,

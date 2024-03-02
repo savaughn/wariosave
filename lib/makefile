@@ -15,7 +15,7 @@ SRCDIR = src
 BUILDDIR = build
 RELEASEDIR = $(BUILDDIR)/release
 
-VERSION = 0.2.0
+VERSION = 1.0.0
 
 # Source files
 SOURCES = $(wildcard $(SRCDIR)/*.c)
