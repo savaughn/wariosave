@@ -4,8 +4,8 @@
  * (See accompanying file LICENSE.txt or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef WS_COMMON_H
+#define WS_COMMON_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,29 +23,37 @@
         ((byte) & 0x02 ? '1' : '0'), \
         ((byte) & 0x01 ? '1' : '0')
 
-#define SAVE_FILE_A_OFFSET 0x04
-#define SAVE_FILE_B_OFFSET 0x44
-#define SAVE_FILE_C_OFFSET 0x84
-#define SAVE_FILE_OFFSET 0x40
-#define SAVE_STRUCT_SIZE 0x14
-#define LEVELS_COUNT 7
-#define MAX_COURSE_COUNT 8
-#define MAX_LVL_NAME_CHAR 14
-#define MAX_COURSE_NAME_CHAR 18
-#define MAX_COIN_DIGITS_STR 7
-#define MAX_TREASURE_COUNT 15
+#define WS_SAVE_FILE_A_OFFSET 0x04
+#define WS_SAVE_FILE_B_OFFSET 0x44
+#define WS_SAVE_FILE_C_OFFSET 0x84
+#define WS_SAVE_FILE_OFFSET 0x40
+#define WS_SAVE_STRUCT_SIZE 0x14
+#define WS_LEVELS_COUNT 7
+#define WS_MAX_COURSE_COUNT 8
+#define WS_MAX_LVL_NAME_CHAR 14
+#define WS_MAX_COURSE_NAME_CHAR 18
+#define WS_MAX_COIN_DIGITS_STR 7
+#define WS_MAX_TREASURE_COUNT 15
+#define WS_MAX_FILE_SLOT_COUNT 3
 
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int uint32_t;
 
+/**
+ * WS_Level data structure
+ * name: Name of the level
+ * course_exit_count: Number of course exits in the level
+ * completion_bitmask: 8-bit bitmask of course completion
+ * completion_rate: Completion rate of the level in percentage
+*/
 typedef struct
 {
     /**
      * Name of the level
      * Max length of 14 characters
     */
-    char name[MAX_LVL_NAME_CHAR];
+    char name[WS_MAX_LVL_NAME_CHAR];
     /**
      * Number of course exits in the level
     */
@@ -58,14 +66,14 @@ typedef struct
      * Completion rate of the level in percentage
     */
     uint8_t completion_rate;
-} Level;
+} WS_Level;
 
 /**
  * Default level data
  * name: Name of the level
  * course_exit_count: Number of course exits in the level
 */
-static const Level default_level_data[LEVELS_COUNT] = {
+static const WS_Level WS_default_level_data[WS_LEVELS_COUNT] = {
     {.name = "Rice Beach",
      .course_exit_count = 7,
      .completion_bitmask = 0,
@@ -99,15 +107,15 @@ static const Level default_level_data[LEVELS_COUNT] = {
 typedef struct
 {
     uint8_t sLevelId;
-    // Values 99xxxx stored in dec format. Use get_decimal_bytes to convert to int
+    // Values 99xxxx stored in dec format. Use ws_get_decimal_bytes to convert to int
     uint8_t sTotalCoins_High;
-    // Values xx99xx stored in dec format. Use get_decimal_bytes to convert to int
+    // Values xx99xx stored in dec format. Use ws_get_decimal_bytes to convert to int
     uint8_t sTotalCoins_Mid;
-    // Values xxxx99 stored in dec format. Use get_decimal_bytes to convert to int
+    // Values xxxx99 stored in dec format. Use ws_get_decimal_bytes to convert to int
     uint8_t sTotalCoins_Low;
-    // Value stored in memory in dec format. Use get_decimal_byte to convert to int
+    // Value stored in memory in dec format. Use ws_get_decimal_byte to convert to int
     uint8_t sHearts;
-    // Value stored in memory in dec format. Use get_decimal_byte to convert to int
+    // Value stored in memory in dec format. Use ws_get_decimal_byte to convert to int
     uint8_t sLives;
     // Current powerup value
     uint8_t sPlPower;
@@ -138,11 +146,14 @@ typedef struct
      * 1-bit flag of game completion
     */
     uint8_t sGameCompleted;
-} WarioSave;
+} WS_WarioSave;
 
-typedef struct { WarioSave save[3]; } WarioGameSave;
+/**
+ * All three save slots copied into one buffer
+*/
+typedef struct { WS_WarioSave save[WS_MAX_FILE_SLOT_COUNT]; } WS_WarioGameSave;
 
-static const char treasure_names[MAX_TREASURE_COUNT] = {
+static const char WS_treasure_names[WS_MAX_TREASURE_COUNT] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'
 };
 typedef enum {
@@ -161,8 +172,14 @@ typedef enum {
     TREASURE_M, 
     TREASURE_N, 
     TREASURE_O 
-} TreasureNames;
+} WS_TreasureNames;
 
+/**
+ * WS_Treasure data structure
+ * count: count of treasures obtained
+ * completion_rate: completion rate of the treasures in percentage
+ * obtained: array of bools representing if the treasure was obtained
+*/
 typedef struct {
     /**
      * count of treasures obtained
@@ -174,11 +191,11 @@ typedef struct {
     uint8_t completion_rate;
     /**
      * array of bools representing if the treasure was obtained
-     * accessed with TreasureNames enum
+     * accessed with WS_TreasureNames enum
      * EX: treasure.obtained[TREASURE_A]
      */
-    TreasureNames obtained[MAX_TREASURE_COUNT];
-} Treasure;
+    WS_TreasureNames obtained[WS_MAX_TREASURE_COUNT];
+} WS_Treasure;
 
 // Custom save file structure for useful data
 typedef struct
@@ -205,12 +222,12 @@ typedef struct
     /**
      * Array of level completion rates
     */
-    Level levels[LEVELS_COUNT];
+    WS_Level levels[WS_LEVELS_COUNT];
     /**
-     * Treasure data
+     * WS_Treasure data
     */
-    Treasure treasure;
-} PlayerSave;
+    WS_Treasure treasure;
+} WS_PlayerSave;
 
 typedef enum
 {
@@ -218,7 +235,7 @@ typedef enum
     FILE_ERROR,
     MEMORY_ERROR,
     READ_ERROR
-} FileError;
+} WS_FileError;
 
 typedef enum
 {
@@ -226,6 +243,6 @@ typedef enum
     FILE_B,
     FILE_C,
     FILE_COUNT
-} SaveSlot;
+} WS_SaveSlot;
 
 #endif

@@ -6,37 +6,35 @@
 
 #include <wariosave/helpers.h>
 
-#define BUFFER_PADDING 0x14
-
-int get_decimal_byte(int byte)
+uint8_t ws_get_decimal_byte(const uint8_t byte)
 {
-    char buffer[3];
+    char buffer[4] = {"\0"};
     snprintf(buffer, sizeof(buffer), "%02x", byte);
-    return (int)strtol(buffer, NULL, 10);
+    return (uint8_t)strtol(buffer, NULL, 10);
 }
 
-uint32_t get_decimal_bytes(int byte1, int byte2, int byte3)
+uint32_t ws_get_decimal_bytes(const uint8_t byte1, const uint8_t byte2, const uint8_t byte3)
 {
-    char buffer[MAX_COIN_DIGITS_STR];
+    char buffer[WS_MAX_COIN_DIGITS_STR];
 
     // Format the string into the buffer
     // Each byte is already in dec format. Use %x
     // so that the values are not converted "from hex to dec"
-    snprintf(buffer, sizeof(buffer), "%x%02x%02x", byte1, byte2, byte3);
+    snprintf(buffer, sizeof(buffer), "%02x%02x%02x", byte1, byte2, byte3);
     return (uint32_t)strtol(buffer, NULL, 10);
 }
 
-int load_save_to_buffer(WarioGameSave *save, const char *file_path)
+WS_FileError ws_load_save_to_buffer(WS_WarioGameSave *save, const char *file_path)
 {
     FILE *file = fopen(file_path, "rb");
-    FileError error = NO_ERROR;
+    WS_FileError error = NO_ERROR;
     if (file == NULL)
     {
         perror("Error opening file");
         return FILE_ERROR;
     }
 
-    for (int fileSlot = FILE_A, offset = SAVE_FILE_A_OFFSET; fileSlot < FILE_COUNT; fileSlot++, offset += SAVE_FILE_OFFSET)
+    for (int fileSlot = FILE_A, offset = WS_SAVE_FILE_A_OFFSET; fileSlot < FILE_COUNT; fileSlot++, offset += WS_SAVE_FILE_OFFSET)
     {
         if (fseek(file, offset, SEEK_SET) != 0)
         {
@@ -45,19 +43,19 @@ int load_save_to_buffer(WarioGameSave *save, const char *file_path)
             return MEMORY_ERROR;
         }
 
-        uint8_t byte_array[SAVE_STRUCT_SIZE];
-        size_t bytes_read = fread(byte_array, 1, SAVE_STRUCT_SIZE, file);
+        uint8_t byte_array[WS_SAVE_STRUCT_SIZE];
+        size_t bytes_read = fread(byte_array, 1, WS_SAVE_STRUCT_SIZE, file);
 
         // Check if the read operation was successful
-        if (bytes_read != SAVE_STRUCT_SIZE)
+        if (bytes_read != WS_SAVE_STRUCT_SIZE)
         {
             perror("Error reading from file");
             fclose(file);
             return READ_ERROR;
         }
 
-        // WarioSave struct is modeled after the byte array
-        save->save[fileSlot] = *(WarioSave *)byte_array;
+        // WS_WarioSave struct is modeled after the byte array
+        save->save[fileSlot] = *(WS_WarioSave *)byte_array;
     }
 
     // Close the file
@@ -66,9 +64,9 @@ int load_save_to_buffer(WarioGameSave *save, const char *file_path)
     return error;
 }
 
-void get_level_completion_rates(WarioSave *save, Level *level_data)
+void ws_get_level_completion_rates(const WS_WarioSave *save, WS_Level *level_data)
 {
-    uint8_t level_completion_bitmask[LEVELS_COUNT] = {
+    uint8_t const level_completion_bitmask[WS_LEVELS_COUNT] = {
         save->sMapRiceBeachCompletion,
         save->sMapMtTeapotCompletion,
         save->sMapStoveCanyonCompletion,
@@ -76,10 +74,10 @@ void get_level_completion_rates(WarioSave *save, Level *level_data)
         save->sMapParsleyWoodsCompletion,
         save->sMapSherbetLandCompletion,
         save->sMapSyrupCastleCompletion};
-    for (int i = 0; i < LEVELS_COUNT; i++)
+    for (int i = 0; i < WS_LEVELS_COUNT; i++)
     {
         int count = 0;
-        uint8_t course_exit_count = default_level_data[i].course_exit_count;
+        uint8_t course_exit_count = WS_default_level_data[i].course_exit_count;
         level_data[i].completion_bitmask = level_completion_bitmask[i];
         for (int j = 0; j < course_exit_count; j++)
         {
@@ -89,54 +87,56 @@ void get_level_completion_rates(WarioSave *save, Level *level_data)
     }
 }
 
-int get_player_lives(WarioSave *save)
+uint8_t ws_get_player_lives(const WS_WarioSave *save)
 {
-    return get_decimal_byte(save->sLives);
+    return ws_get_decimal_byte(save->sLives);
 }
 
-int get_player_hearts(WarioSave *save)
+uint8_t ws_get_player_hearts(const WS_WarioSave *save)
 {
-    return get_decimal_byte(save->sHearts);
+    return ws_get_decimal_byte(save->sHearts);
 }
 
-int get_player_coins(WarioSave *save)
+uint32_t ws_get_player_coins(const WS_WarioSave *save)
 {
-    return get_decimal_bytes(save->sTotalCoins_High, save->sTotalCoins_Mid, save->sTotalCoins_Low);
+    return ws_get_decimal_bytes(save->sTotalCoins_High, save->sTotalCoins_Mid, save->sTotalCoins_Low);
 }
 
-bool get_is_game_completed(WarioSave *save)
+bool ws_is_game_completed(const WS_WarioSave *save)
 {
     return (bool)save->sGameCompleted;
 }
 
-Treasure get_treasure_data(WarioSave *save)
+WS_Treasure ws_get_treasure_data(const WS_WarioSave *save)
 {
-    Treasure treasure;
-    treasure.count = 0;
-    treasure.completion_rate = 0;
-    for (int i = 0; i < MAX_TREASURE_COUNT; i++)
+    WS_Treasure treasure = {
+        .obtained = {0},
+        .count = 0,
+        .completion_rate = 0
+    };
+
+    for (int i = 0; i < WS_MAX_TREASURE_COUNT; i++)
     {
-        treasure.obtained[i] = 0;
-        // first byte in sTreasures is unused 
-        if ((save->sTreasures >> (i+1)) & 1)
+        // initial LSB in sTreasures is unused 
+        if ((save->sTreasures >> (i + 1)) & 1)
         {
-            treasure.obtained[i] = 1;
+            treasure.obtained[i] = true;
             treasure.count++;
         }
     }
 
-    treasure.completion_rate = (int)(treasure.count / (MAX_TREASURE_COUNT * 1.0) * 100);
+    treasure.completion_rate = (int)(treasure.count / (WS_MAX_TREASURE_COUNT * 1.0) * 100);
     return treasure;
 }
 
-void initialize_player_save(WarioSave *save, PlayerSave *player_save)
+void ws_initialize_player_save(const WS_WarioSave *save, WS_PlayerSave *player_save)
 {
-    player_save->lives = get_player_lives(save);
-    player_save->hearts = get_player_hearts(save);
-    player_save->total_coins = get_player_coins(save);
-    player_save->game_completed = get_is_game_completed(save);
-    player_save->treasure = get_treasure_data(save);
-    Level player_level_data[LEVELS_COUNT];
-    get_level_completion_rates(save, player_level_data);
+    player_save->lives = ws_get_player_lives(save);
+    player_save->hearts = ws_get_player_hearts(save);
+    player_save->total_coins = ws_get_player_coins(save);
+    player_save->game_completed = ws_is_game_completed(save);
+    player_save->treasure = ws_get_treasure_data(save);
+    WS_Level player_level_data[WS_LEVELS_COUNT];
+    ws_get_level_completion_rates(save, player_level_data);
     memcpy(player_save->levels, &player_level_data, sizeof(player_save->levels));
 }

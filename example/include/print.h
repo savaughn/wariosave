@@ -9,7 +9,7 @@
 
 #include <wariosave.h>
 
-void print_player_save(PlayerSave *save);
-void print_save_data(WarioSave *save);
+void print_player_save(WS_PlayerSave *save);
+void print_save_data(WS_WarioSave *save);
 
 #endif // PRINT_H

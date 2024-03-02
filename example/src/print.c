@@ -6,31 +6,31 @@
 
 #include "print.h"
 
-void print_treasures_obtained(PlayerSave *player_save)
+void print_treasures_obtained(WS_PlayerSave *player_save)
 {
-    for (int i = 0; i < MAX_TREASURE_COUNT; i++)
+    for (int i = 0; i < WS_MAX_TREASURE_COUNT; i++)
     {
-        printf("%c ", player_save->treasure.obtained[i] ? treasure_names[i] : '-');
-        if (i >= MAX_TREASURE_COUNT - 1)
+        printf("%c ", player_save->treasure.obtained[i] ? WS_treasure_names[i] : '-');
+        if (i >= WS_MAX_TREASURE_COUNT - 1)
         {
             printf("\n");
         }
     }
 }
 
-void print_player_save(PlayerSave *save) {
+void print_player_save(WS_PlayerSave *save) {
     printf("Total Coins: %u\n", save->total_coins);
     printf("Hearts: %d\n", save->hearts);
     printf("Lives: %d\n", save->lives);
     printf("Game Completed: %s\n", save->game_completed ? "true" : "false");
-    for (int i = 0; i < LEVELS_COUNT; i++) {
-        printf("%s: %d%%\n", default_level_data[i].name, save->levels[i].completion_rate);
+    for (int i = 0; i < WS_LEVELS_COUNT; i++) {
+        printf("%s: %d%%\n", WS_default_level_data[i].name, save->levels[i].completion_rate);
     }
     printf("Treasure completion rate: %d%%\n", save->treasure.completion_rate);
     print_treasures_obtained(save);
 }
 
-void print_save_data(WarioSave *save)
+void print_save_data(WS_WarioSave *save)
 {
     printf("sLevelId: %d\n", save->sLevelId);
     printf("sTotalCoins_High: %02x\n", save->sTotalCoins_High);

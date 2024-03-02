@@ -4,8 +4,8 @@
 * (See accompanying file LICENSE.txt or copy at http://opensource.org/licenses/MIT)
 */
 
-#ifndef HELPERS_H
-#define HELPERS_H
+#ifndef WS_HELPERS_H
+#define WS_HELPERS_H
 
 #include <wariosave/common.h>
 
@@ -15,7 +15,7 @@
  * @return The decimal value of the byte
  * @details Some bytes are stored in dec format in memory instead of hex. So we have to convert the literal value to int
 */
-int get_decimal_byte(int byte);
+uint8_t ws_get_decimal_byte(const uint8_t byte);
 
 /**
  * Get the stored decimal value of 3 bytes
@@ -26,70 +26,70 @@ int get_decimal_byte(int byte);
  * @details Some bytes are stored in dec format in memory instead of hex. So we have to convert the literal value to int
 
 */
-uint32_t get_decimal_bytes(int byte1, int byte2, int byte3);
+uint32_t ws_get_decimal_bytes(const uint8_t byte1, const uint8_t byte2, const uint8_t byte3);
 
 /*
 * Load the save data into a buffer
-* @param save The WarioSave buffer to load the save data into
+* @param save The WS_WarioSave buffer to load the save data into
 * @param file_path The path to the save file
-* @return The FileError error code
+* @return The WS_FileError error code
 */
-int load_save_to_buffer(WarioGameSave *save, const char *file_path);
+WS_FileError ws_load_save_to_buffer(WS_WarioGameSave *save, const char *file_path);
 
 /**
- * Get the completion rate of each level saving the data into the PlayerSave struct
- * @param save The WarioSave struct
- * @param player_save The PlayerSave struct
+ * Get the completion rate of each level saving the data into the WS_PlayerSave struct
+ * @param save The WS_WarioSave struct
+ * @param player_save The WS_PlayerSave struct
 */
-Level *get_completion_rate(WarioSave *save, PlayerSave *player_save);
+WS_Level *get_completion_rate(const WS_WarioSave *save, WS_PlayerSave *player_save);
 
 /**
- * Initialize the PlayerSave struct with the data from the WarioSave struct
- * @param save The WarioSave struct
- * @param player_save The PlayerSave struct
+ * Initialize the WS_PlayerSave struct with the data from the WS_WarioSave struct
+ * @param save The WS_WarioSave struct
+ * @param player_save The WS_PlayerSave struct
 */
-void initialize_player_save(WarioSave *save, PlayerSave *player_save);
+void ws_initialize_player_save(const WS_WarioSave *save, WS_PlayerSave *player_save);
 
 /**
  * Get the completion rate of each level
- * @param save The WarioSave struct
- * @param level_data The array of Level structs
+ * @param save The WS_WarioSave struct
+ * @param level_data The array of WS_Level structs
 */
-void get_level_completion_rates(WarioSave *save, Level *level_data);
+void ws_get_level_completion_rates(const WS_WarioSave *save, WS_Level *level_data);
 
 /**
  * Get the player's lives
- * @param save The WarioSave struct
+ * @param save The WS_WarioSave struct
  * @return The player's life count
 */
-int get_player_lives(WarioSave *save);
+uint8_t ws_get_player_lives(const WS_WarioSave *save);
 
 /**
  * Get the player's hearts
- * @param save The WarioSave struct
+ * @param save The WS_WarioSave struct
  * @return The player's heart count
 */
-int get_player_hearts(WarioSave *save);
+uint8_t ws_get_player_hearts(const WS_WarioSave *save);
 
 /**
  * Get the player's coins
- * @param save The WarioSave struct
+ * @param save The WS_WarioSave struct
  * @return The player's coin count
 */
-int get_player_coins(WarioSave *save);
+uint32_t ws_get_player_coins(const WS_WarioSave *save);
 
 /**
  * Get the player's game completion status
- * @param save The WarioSave struct
+ * @param save The WS_WarioSave struct
  * @return completed flag
 */
-bool get_is_game_completed(WarioSave *save);
+bool ws_is_game_completed(const WS_WarioSave *save);
 
 /**
  * Get the save slot treasure data
- * @param save The WarioSave struct
- * @return Treasure struct
+ * @param save The WS_WarioSave struct
+ * @return WS_Treasure struct
 */
-Treasure get_treasure_data(WarioSave *save);
+WS_Treasure ws_get_treasure_data(const WS_WarioSave *save);
 
-#endif // HELPERS_H
+#endif // WS_HELPERS_H

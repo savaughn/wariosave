@@ -1,4 +1,8 @@
+# lib and example build folder
 build/
 deps/
 
 .DS_Store
+
+# test executable
+wariosave_test

@@ -42,12 +42,22 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+
+      - name: Install Test tools
+        run: |
+          brew install cunit cppcheck
   
       - name: Build wariosave
         run: |
           cd lib
           mkdir -p build/release
           make release
+
+      - name: Run Tests
+        run: |
+          cppcheck --std=c11 --enable=all --inconclusive --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction lib/src/ || true
+          cd test/
+          make test
   
       - name: Publish Build Artifacts
         uses: actions/upload-artifact@v2

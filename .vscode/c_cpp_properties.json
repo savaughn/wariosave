@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/example/include",
-                "${workspaceFolder}/lib/include"
+                "${workspaceFolder}/lib/include",
+                "/opt/homebrew/Cellar/cunit/2.1-3/include"
             ],
             "defines": [],
             "macFrameworkPath": [
