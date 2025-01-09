@@ -16,6 +16,23 @@
             "cppStandard": "c++17",
             "intelliSenseMode": "macos-gcc-arm64",
             "compilerPath": "/usr/bin/gcc"
+        },
+        {
+            "name": "WoA64",
+            "includePath": [
+                "${workspaceFolder}/lib/include",
+                "${workspaceFolder}/example/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.22621.0",
+            "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/Hostarm64/arm64/cl.exe",
+            "cStandard": "c99",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-arm64"
         }
     ],
     "version": 4

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024 github/savaughn
+ * Copyright (c) 2025 github/savaughn
  * Distributed under the MIT License (MIT)
  * (See accompanying file LICENSE.txt or copy at http://opensource.org/licenses/MIT)
  */
@@ -11,8 +11,6 @@ int main(int argc, char *argv[])
 {
     // Complete savefile buffer
     WS_WarioGameSave game_save;
-    // Save slot buffer (3 file slots)
-    WS_WarioSave save_file[WS_MAX_FILE_SLOT_COUNT];
     // Formatted player save data (3 player saves)
     WS_PlayerSave player_save[WS_MAX_FILE_SLOT_COUNT];
 
@@ -31,8 +29,11 @@ int main(int argc, char *argv[])
 
     for (uint8_t file_slot = FILE_A; file_slot < FILE_COUNT; file_slot++)
     {
-        save_file[file_slot] = game_save.save[file_slot];
-        ws_initialize_player_save(&save_file[file_slot], &player_save[file_slot]);
+        printf("\n-------File %d------\n", file_slot + 1);
+        // single save slot
+        WS_WarioSave save_file;
+        save_file = game_save.save[file_slot];
+        ws_initialize_player_save(&game_save.save[file_slot], &player_save[file_slot]);
         print_player_save(&player_save[file_slot]);
     }
 

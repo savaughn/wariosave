@@ -1,0 +1,33 @@
+// filepath: /d:/wariosave/.vscode/tasks.json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build example with CMake",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "example/build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$msCompile"]
+        },
+        {
+            "label": "Run example application",
+            "type": "shell",
+            "command": "${workspaceFolder}/example/build/Debug/example_project.exe",
+            "args": [
+                "D:\\wariosave\\test\\saves\\wario.sav"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": "Build example with CMake"
+        }
+    ]
+}

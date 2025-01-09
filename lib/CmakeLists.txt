@@ -1,0 +1,63 @@
+# CMakeLists for building library
+#
+# Copyright (c) 2025 github/savaughn
+#
+# Distributed under the MIT License (MIT)
+# (See accompanying file LICENSE.txt or copy at http://opensource.org/licenses/MIT)
+
+cmake_minimum_required(VERSION 3.10)
+
+# Setup the project and settings
+project(wariosave C)
+set(PROJECT_VERSION 1.0.0)
+
+# Define the platform
+if (WIN32)
+    set(PLATFORM WINDOWS)
+elseif (UNIX AND NOT APPLE)
+    set(PLATFORM LINUX)
+elseif (APPLE)
+    set(PLATFORM OSX)
+endif()
+
+# Include directories
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+# Define source directory
+set(SRCDIR ${CMAKE_SOURCE_DIR}/src)
+
+# Source files
+file(GLOB_RECURSE SOURCES "${SRCDIR}/*.c")
+
+# Add library
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
+
+# Compiler flags
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        /W4
+        /DPROJECT_VERSION=\"${PROJECT_VERSION}\"
+    )
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -std=c11 -Wall -Wextra -Wpedantic -Wno-missing-braces -Wunused-result
+        -Wformat=2 -Wno-unused-parameter -Wshadow
+        -Wwrite-strings -Wstrict-prototypes -Wold-style-definition
+        -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -D_DEFAULT_SOURCE
+        -DPROJECT_VERSION=\"${PROJECT_VERSION}\"
+    )
+endif()
+
+# Linker flags
+if (WIN32)
+    target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Release>:-Wl,--subsystem,windows>
+    )
+    target_link_libraries(${PROJECT_NAME} opengl32 gdi32 winmm)
+elseif (UNIX AND NOT APPLE)
+    target_link_libraries(${PROJECT_NAME} GL m pthread dl rt X11)
+elseif (APPLE)
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL" "-framework Cocoa" "-framework IOKit" "-framework CoreAudio" "-framework CoreVideo")
+endif()

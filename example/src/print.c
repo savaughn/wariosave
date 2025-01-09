@@ -1,5 +1,5 @@
 /**
-* Copyright (c) 2024 github/savaughn
+* Copyright (c) 2025 github/savaughn
 * Distributed under the MIT License (MIT)
 * (See accompanying file LICENSE.txt or copy at http://opensource.org/licenses/MIT)
 */
@@ -8,6 +8,7 @@
 
 void print_treasures_obtained(WS_PlayerSave *player_save)
 {
+    puts("Treasures obtained: ");
     for (int i = 0; i < WS_MAX_TREASURE_COUNT; i++)
     {
         printf("%c ", player_save->treasure.obtained[i] ? WS_treasure_names[i] : '-');

@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Example Application",
+            "request": "launch",
+            "program": "${workspaceFolder}/example/build/Debug/example_project.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "preLaunchTask": "Build example with CMake"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Build and Launch",
+            "configurations": ["Launch Example Application"]
+        }
+    ]
+}

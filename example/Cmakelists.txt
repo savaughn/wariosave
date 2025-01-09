@@ -1,0 +1,59 @@
+# CMakeLists for building example
+#
+# Copyright (c) 2025 github/savaughn
+#
+# Distributed under the MIT License (MIT)
+# (See accompanying file LICENSE.txt or copy at http://opensource.org/licenses/MIT)
+
+cmake_minimum_required(VERSION 3.10)
+
+# Setup the project and settings
+project(example_project C)
+
+# Define the platform
+if (WIN32)
+    set(PLATFORM WINDOWS)
+elseif (UNIX AND NOT APPLE)
+    set(PLATFORM LINUX)
+elseif (APPLE)
+    set(PLATFORM OSX)
+endif()
+
+## print absolute path of cmake_source_dir
+message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
+
+# Include directories
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/../lib/include
+)
+
+# Define source directory
+set(SRCDIR ${CMAKE_SOURCE_DIR}/src)
+set(BUILDDIR ${CMAKE_SOURCE_DIR}/build)
+
+# Source files
+file(GLOB_RECURSE SOURCES "${SRCDIR}/*.c")
+
+# Link directories
+link_directories(${CMAKE_SOURCE_DIR}/../lib/build/Debug)
+
+# Add executable
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+# Link libraries
+target_link_libraries(${PROJECT_NAME} wariosave)
+
+# Compiler flags
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        /W4
+        /DPROJECT_VERSION=\"${PROJECT_VERSION}\"
+    )
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -g -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function
+        -Wno-unused-but-set-variable -Wno-unused-value -Wno-unused-result -Wno-unused-label
+        -Wno-unused-local-typedefs
+    )
+endif()
