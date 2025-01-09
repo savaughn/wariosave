@@ -1,6 +1,6 @@
 # Makefile for building example
 #
-# Copyright (c) 2024 github/savaughn
+# Copyright (c) 2025 github/savaughn
 #
 # Distributed under the MIT License (MIT)
 # (See accompanying file LICENSE.txt or copy at http://opensource.org/licenses/MIT)
