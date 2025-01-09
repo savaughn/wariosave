@@ -30,7 +30,7 @@ jobs:
         make release
 
     - name: Publish Build Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: wariosave-artifacts-windows-x64
         path: lib/build/release

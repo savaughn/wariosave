@@ -27,7 +27,7 @@ jobs:
         make release
 
     - name: Publish Build Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: wariosave-artifacts-macos-x64
         path: lib/build/release
@@ -60,7 +60,7 @@ jobs:
           make test
   
       - name: Publish Build Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: wariosave-artifacts-macos-arm64
           path: lib/build/release
